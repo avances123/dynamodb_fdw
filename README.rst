@@ -8,6 +8,7 @@ This data wrapper allows to do 'select *' queries on a DynamoDB database (NoSQL)
 
 Install multicorn
 ===========================================
+First you need to activate multicorn extension in your pg database
 ::
     CREATE EXTENSION multicorn;
 
@@ -56,6 +57,7 @@ Example:
 
 Perform queries
 ============================================
+You have a postgresql table now, for now, only read queries are working
 ::
     SELECT * from test;
     
