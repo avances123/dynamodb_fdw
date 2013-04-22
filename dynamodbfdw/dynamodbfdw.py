@@ -28,9 +28,28 @@ class DynamoFdw(ForeignDataWrapper):
         #log_to_postgres(json.dumps(conn.describe_table(self.remote_table)),WARNING)
         return table
 
+
+    def filter_condition(self,quals):
+        for qual in quals:
+            if qual.field_name == 'customer' and qual.operator == '=':
+                return qual.value
+        return None
+
     def execute(self, quals, columns):
         table = self.get_table()
-        for item in table.scan():
+        #result = table.scan()
+
+        customer = self.filter_condition(quals)
+
+        try:
+            log_to_postgres('Asking dynamodb for this columns: ' + json.dumps(list(columns)))
+            result = table.query(customer,attributes_to_get=list(columns))
+        except:
+            # TODO Dangerous query, replace to Error message
+            log_to_postgres('Performing table.scan()')
+            result = table.scan()
+            
+        for item in result:
            log_to_postgres(json.dumps(item),WARNING)
            yield item
 
