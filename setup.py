@@ -13,7 +13,6 @@ setup(
     author='Fabio Rueda',
     author_email='avances123@gmail.com',
     packages=['dynamodbfdw'],
-    scripts=['bin/install-multicorn-9.1.sh'],
     url='https://github.com/avances123/dynamodb_fdw',
     license='LICENSE.txt',
     description='Postgresql Foregin Data Wrapper mapping Amazon DynamoDB',
