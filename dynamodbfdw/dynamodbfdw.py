@@ -1,5 +1,5 @@
 from multicorn import ForeignDataWrapper
-from multicorn.utils import log_to_postgres, ERROR, WARNING
+from multicorn.utils import log_to_postgres, ERROR, WARNING, DEBUG
 import boto.dynamodb
 import json
 
@@ -19,13 +19,13 @@ class DynamoFdw(ForeignDataWrapper):
             self.aws_region = options['aws_region']
             self.remote_table = options['remote_table']
          except KeyError:
-            log_to_postgres("You must specify these options :\n\naws_access_key_id\naws_secret_access_key\naws_region\nremote_table\n",ERROR)
+            log_to_postgres("You must specify these options when creating the FDW: aws_access_key_id,aws_secret_access_key,aws_region,remote_table",ERROR)
 
 
     def get_table(self):
         conn = boto.dynamodb.connect_to_region(self.aws_region,aws_access_key_id=self.aws_access_key_id,aws_secret_access_key=self.aws_secret_access_key)
         table = conn.get_table(self.remote_table)
-        #log_to_postgres(json.dumps(conn.describe_table(self.remote_table)),WARNING)
+        log_to_postgres(json.dumps(conn.describe_table(self.remote_table)),DEBUG)
         return table
 
 
@@ -42,7 +42,7 @@ class DynamoFdw(ForeignDataWrapper):
         customer = self.filter_condition(quals)
 
         try:
-            log_to_postgres('Asking dynamodb for this columns: ' + json.dumps(list(columns)))
+            log_to_postgres('Asking dynamodb for this columns: ' + json.dumps(list(columns)),DEBUG)
             result = table.query(customer,attributes_to_get=list(columns))
         except:
             # TODO Dangerous query, replace to Error message
