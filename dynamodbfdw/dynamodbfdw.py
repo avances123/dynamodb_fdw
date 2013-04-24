@@ -50,7 +50,7 @@ class DynamoFdw(ForeignDataWrapper):
             result = table.scan()
             
         for item in result:
-           log_to_postgres(json.dumps(item),WARNING)
+           #log_to_postgres(json.dumps(item),WARNING)
            yield item
 
 
